@@ -52,7 +52,6 @@ public class HomePageActivity extends AppCompatActivity {
         ArrayList<HashMap<String, String>> rows = db.getAll();
         Gson gsonMain = new Gson();
         String jsonArray = gsonMain.toJson(rows);
-
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         dataModels = gson.fromJson(jsonArray, DataModels[].class);
