@@ -71,4 +71,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public ArrayList<HashMap<String, String>> search(String name) {
+        ArrayList<HashMap<String, String>> list = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String QUERY = "SELECT * FROM items WHERE name LIKE '%"+name+"%'";
+        Cursor cursor = db.rawQuery(QUERY, null);
+        if(cursor.moveToFirst()){
+            do {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("id", cursor.getString(0));
+                map.put("name", cursor.getString(1));
+                map.put("url", cursor.getString(2));
+                list.add(map);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
+
 }
