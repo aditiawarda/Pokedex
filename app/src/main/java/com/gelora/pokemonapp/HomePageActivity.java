@@ -26,7 +26,6 @@ public class HomePageActivity extends AppCompatActivity {
     RecyclerView listItemRV;
     DataModels[] dataModels;
     AdapterListItem adapterListItem;
-
     DatabaseHelper db = new DatabaseHelper(this);
 
     @Override
