@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Pokemon App</string>
+    <string name="label_app">Pokedex</string>
+    <string name="label_button_start">Start</string>
+</resources>
