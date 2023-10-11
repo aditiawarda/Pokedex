@@ -16,6 +16,8 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.gelora.pokemonapp.adapter.AdapterListItem;
@@ -35,6 +37,9 @@ public class HomePageActivity extends AppCompatActivity {
     DataModels[] dataModels;
     AdapterListItem adapterListItem;
     EditText keywordData;
+    RadioGroup filterSorting;
+    RadioButton ascFilter, descFilter;
+    String sortingFilter = "ASC";
     DatabaseHelper db = new DatabaseHelper(this);
 
     @Override
@@ -46,11 +51,16 @@ public class HomePageActivity extends AppCompatActivity {
         db = new DatabaseHelper(getApplicationContext());
 
         keywordData = findViewById(R.id.keyword_ed);
+        filterSorting = findViewById(R.id.radio_group);
+        ascFilter = findViewById(R.id.radio_asc);
+        descFilter = findViewById(R.id.radio_desc);
         listItemRV = findViewById(R.id.list_item_rv);
         listItemRV.setLayoutManager(new LinearLayoutManager(this));
         listItemRV.setHasFixedSize(true);
         listItemRV.setNestedScrollingEnabled(false);
         listItemRV.setItemAnimator(new DefaultItemAnimator());
+
+        ascFilter.setChecked(true);
 
         keywordData.addTextChangedListener(new TextWatcher() {
             @Override
@@ -62,7 +72,7 @@ public class HomePageActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 String keyword = keywordData.getText().toString();
-                getSearch(keyword);
+                getSearch(keyword, sortingFilter);
             }
 
         });
@@ -78,13 +88,34 @@ public class HomePageActivity extends AppCompatActivity {
             }
         });
 
-        getDataAll();
+        filterSorting.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (ascFilter.isChecked()) {
+                    sortingFilter = "ASC";
+                    if(!keywordData.getText().toString().equals("")){
+                        getSearch(keywordData.getText().toString(), sortingFilter);
+                    } else {
+                        getDataAll(sortingFilter);
+                    }
+                } else if (descFilter.isChecked()) {
+                    sortingFilter = "DESC";
+                    if(!keywordData.getText().toString().equals("")){
+                        getSearch(keywordData.getText().toString(), sortingFilter);
+                    } else {
+                        getDataAll(sortingFilter);
+                    }
+                }
+            }
+        });
+
+        getDataAll(sortingFilter);
 
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void getDataAll(){
-        ArrayList<HashMap<String, String>> rows = db.getAll();
+    private void getDataAll(String filter){
+        ArrayList<HashMap<String, String>> rows = db.getAll(filter);
         Gson gsonMain = new Gson();
         String jsonArray = gsonMain.toJson(rows);
         GsonBuilder builder = new GsonBuilder();
@@ -95,8 +126,8 @@ public class HomePageActivity extends AppCompatActivity {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void getSearch(String keyword){
-        ArrayList<HashMap<String, String>> rows = db.search(keyword);
+    private void getSearch(String keyword, String filter){
+        ArrayList<HashMap<String, String>> rows = db.search(keyword, filter);
         Gson gsonMain = new Gson();
         String jsonArray = gsonMain.toJson(rows);
         GsonBuilder builder = new GsonBuilder();

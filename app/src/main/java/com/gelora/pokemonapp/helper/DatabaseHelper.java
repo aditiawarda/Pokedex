@@ -29,9 +29,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public ArrayList<HashMap<String, String>> getAll() {
+    public ArrayList<HashMap<String, String>> getAll(String filter) {
         ArrayList<HashMap<String, String>> list = new ArrayList<>();
-        String QUERY = "SELECT * FROM items";
+        String QUERY = "SELECT * FROM items ORDER BY name "+filter;
         SQLiteDatabase database = this.getReadableDatabase();
         Cursor cursor = database.rawQuery(QUERY, null);
         if(cursor.moveToFirst()){
@@ -71,10 +71,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public ArrayList<HashMap<String, String>> search(String name) {
+    public ArrayList<HashMap<String, String>> search(String name, String filter) {
         ArrayList<HashMap<String, String>> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String QUERY = "SELECT * FROM items WHERE name LIKE '%"+name+"%'";
+        String QUERY = "SELECT * FROM items WHERE name LIKE '%"+name+"%' ORDER BY id "+filter;
         Cursor cursor = db.rawQuery(QUERY, null);
         if(cursor.moveToFirst()){
             do {
