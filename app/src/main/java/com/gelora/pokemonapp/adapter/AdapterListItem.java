@@ -47,7 +47,6 @@ public class AdapterListItem extends RecyclerView.Adapter<AdapterListItem.MyView
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, final int i) {
         final DataModels dataTest = data[i];
-
         int randomIndex = new Random().nextInt(backgroundResources.length);
         myViewHolder.dataParent.setBackgroundResource(backgroundResources[randomIndex]);
 
@@ -61,7 +60,6 @@ public class AdapterListItem extends RecyclerView.Adapter<AdapterListItem.MyView
                 mContext.startActivity(intent);
             }
         });
-
     }
 
     @Override
